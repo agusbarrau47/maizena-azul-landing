@@ -18,30 +18,96 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.navbar__inner {
+.navbar .navbar__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 32px;
+  /* Alinear el ancho del navbar con el del hero (.hero__inner). */
+  width: min(100% - 64px, 1440px);
+  margin-inline: auto;
 }
 
+/* Marca chica: presente en el DOM, oculta en top-of-page (desktop) y revelada
+   suavemente al scrollear. No es contenido crítico: el título del hero la porta. */
 .navbar__logo {
   display: flex;
   align-items: center;
   gap: 12px;
   z-index: 10;
-  transition: opacity var(--transition-fast);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 320ms ease, transform 320ms ease, visibility 320ms ease;
+}
+
+.navbar--scrolled .navbar__logo {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .navbar__logo:hover {
   opacity: 0.9;
 }
 
+/* ── Desktop: grid estable de 3 zonas. En TOP los links están a la DERECHA
+   (junto al CTA); al scrollear se DESLIZAN hacia el centro con transform.
+   Nunca se anima el layout (sin justify-content / margin), solo transform. ── */
+@media (min-width: 769px) {
+  .navbar .navbar__inner {
+    display: grid;
+    /* col1: zona izquierda (marca chica) | col2: links | col3: CTA */
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .navbar__logo {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .navbar__links {
+    grid-column: 2;
+    /* Top-of-page: pegados a la derecha, antes del CTA (sin desplazamiento). */
+    justify-self: end;
+    transform: translateX(0);
+    transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  /* Scrolled: los links se deslizan hacia la izquierda, a una posición más
+     central de la barra. Desplazamiento negativo y proporcional al ancho. */
+  .navbar--scrolled .navbar__links {
+    transform: translateX(clamp(-360px, -24vw, -120px));
+  }
+
+  .navbar__cta-desktop {
+    grid-column: 3;
+    justify-self: end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar__logo {
+    transform: none;
+    transition: opacity 0.01ms, visibility 0.01ms;
+  }
+  .navbar__links {
+    transition: none;
+  }
+}
+
 
 .navbar__logo-text {
   color: var(--white);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .navbar__links {
@@ -172,8 +238,37 @@
 }
 
 @media (max-width: 768px) {
+  /* Mobile: layout simple — marca chica a la izquierda, hamburguesa a la derecha. */
+  .navbar .navbar__inner,
+  .navbar--scrolled .navbar__inner {
+    display: flex;
+    justify-content: space-between;
+    width: min(100% - 32px, 1440px);
+  }
+
+  /* Marca chica oculta en top-of-page (el BLUE SKY GROUP grande del hero es el
+     protagonista) y aparece suavemente al scrollear, cuando el grande se desvanece.
+     visibility/opacity/transform (no display) para que la transición anime. */
+  .navbar__logo {
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition: opacity 320ms ease, transform 320ms ease, visibility 320ms ease;
+  }
+
+  .navbar--scrolled .navbar__logo {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
   .navbar__hamburger {
     display: flex;
+    opacity: 1;
+    visibility: visible;
   }
 
   .navbar__links,
