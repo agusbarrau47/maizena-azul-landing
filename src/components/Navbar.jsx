@@ -6,9 +6,18 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      const nextScrolled = window.scrollY > 80;
+      setScrolled(nextScrolled);
+      // Clase global para que el Hero (hermano, no hijo del Navbar) reaccione.
+      document.documentElement.classList.toggle('is-scrolled', nextScrolled);
+    };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.documentElement.classList.remove('is-scrolled');
+    };
   }, []);
 
   useEffect(() => {
@@ -38,7 +47,7 @@ export default function Navbar() {
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`} id="navbar">
       <div className="navbar__inner container">
         <a href="#" className="navbar__logo" aria-label="Blue Sky Group Home">
-          <span className="navbar__logo-text">Blue Sky Group</span>
+          <span className="navbar__logo-text">BLUE SKY GROUP</span>
         </a>
 
         {/* Desktop navigation */}
@@ -93,7 +102,7 @@ export default function Navbar() {
         aria-hidden={!mobileOpen}
       >
         <div className="mobile-menu__header container">
-          <span className="mobile-menu__brand">Blue Sky Group</span>
+          <span className="mobile-menu__brand">BLUE SKY GROUP</span>
           <button
             className="mobile-menu__close"
             onClick={closeMenu}

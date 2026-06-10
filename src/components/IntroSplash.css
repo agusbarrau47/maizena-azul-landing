@@ -23,10 +23,10 @@
 .intro-splash__text {
   font-family: var(--font-family);
   /* Desktop: una sola línea, ocupando casi todo el ancho sin overflow */
-  font-size: min(9.3vw, 210px);
+  font-size: min(8.8vw, 200px);
   font-weight: 900;
-  line-height: 0.88;
-  letter-spacing: -0.075em;
+  line-height: 0.94;
+  letter-spacing: -0.05em;
   color: var(--white);
   text-transform: uppercase;
   margin: 0;
@@ -57,9 +57,9 @@
 /* En mobile: puede partirse en dos líneas, equilibrado y sin cortes feos */
 @media (max-width: 768px) {
   .intro-splash__text {
-    font-size: clamp(64px, 19vw, 118px);
-    line-height: 0.9;
-    letter-spacing: -0.065em;
+    font-size: clamp(60px, 18vw, 114px);
+    line-height: 1;
+    letter-spacing: -0.04em;
     white-space: normal;
     max-width: min(92vw, 640px);
     text-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);

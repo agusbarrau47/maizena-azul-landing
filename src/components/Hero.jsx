@@ -4,9 +4,12 @@ import './Hero.css';
 export default function Hero() {
   return (
     <section className="hero" id="hero">
-      <div className="container hero__container">
+      <div className="hero__inner">
         <div className="hero__content">
-          <h1 className="hero__title">BLUE SKY GROUP</h1>
+          <h1 className="hero__title">
+            <span className="hero__title-line">Blue Sky</span>
+            <span className="hero__title-line">Group</span>
+          </h1>
 
           <div className="hero__info-block">
             <p className="hero__lead">

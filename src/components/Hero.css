@@ -7,31 +7,74 @@
   position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  /* Título arriba a la izquierda, en la misma franja superior que el navbar:
+     padding-top apenas mayor que la altura del navbar fixed (~72px) para que
+     el título arranque justo debajo de la barra, sin gap muerto. */
+  align-items: flex-start;
   overflow: hidden;
-  padding: 140px 0 80px;
+  padding: 104px 0 88px;
   background-color: var(--primary);
 }
 
-.hero__container {
+/* Contenedor propio del hero, más ancho que el .container global (1120px)
+   para abrir la composición y acercar el título al borde izquierdo. */
+.hero__inner {
   position: relative;
   z-index: 1;
+  width: min(100% - 64px, 1440px);
+  margin-inline: auto;
 }
 
 .hero__content {
-  max-width: 1000px;
+  max-width: 1100px;
   text-align: left;
 }
 
 .hero__title {
-  font-size: clamp(56px, 10.5vw, 148px);
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(72px, 11vw, 190px);
   font-weight: 900;
-  line-height: 0.86;
-  letter-spacing: -0.045em;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
   text-transform: uppercase;
   color: var(--white);
   margin-bottom: 48px;
-  max-width: 900px;
+  transform-origin: left top;
+  /* Visible por defecto; solo pierde protagonismo al scrollear. */
+  transition:
+    opacity 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero__title-line {
+  display: block;
+}
+
+/* Estado scrolled (desktop): el título grande se condensa hacia el navbar,
+   donde aparece la marca chica. Activado por .is-scrolled (Navbar.jsx). */
+.is-scrolled .hero__title {
+  opacity: 0.18;
+  transform: translateY(-24px) scale(0.96);
+}
+
+/* Mobile: el título grande se desvanece por completo al scrollear para que NO
+   conviva con la marca chica del header. Visible por defecto (no es base). */
+@media (max-width: 768px) {
+  .is-scrolled .hero__title {
+    opacity: 0;
+    transform: translateY(-24px) scale(0.96);
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title {
+    transition: opacity 0.01ms;
+  }
+  .is-scrolled .hero__title {
+    transform: none;
+  }
 }
 
 .hero__info-block {
@@ -105,7 +148,8 @@
 /* ── Ecosystem band: Holding → Prospect → Commerce ── */
 .hero__ecosystem {
   width: 100%;
-  padding: 28px 32px;
+  max-width: 1100px;
+  padding: 32px 36px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.06);
@@ -207,12 +251,18 @@
 @media (max-width: 768px) {
   .hero {
     min-height: auto;
-    padding: 140px 0 72px;
+    padding: 132px 0 72px;
+  }
+
+  .hero__inner {
+    width: min(100% - 40px, 1440px);
   }
 
   .hero__title {
-    font-size: clamp(48px, 13vw, 80px);
-    margin-bottom: 40px;
+    font-size: clamp(64px, 18vw, 108px);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    margin-bottom: 36px;
   }
 
   .hero__info-block {

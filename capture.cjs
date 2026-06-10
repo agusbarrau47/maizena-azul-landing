@@ -33,6 +33,23 @@ const puppeteer = require('puppeteer');
   // Desktop sections
   await takeScreenshot('desktop-full-page');
   await takeScreenshot('desktop-hero', await getElementClip('.hero'));
+  // Navbar at top-of-page (no brand) — fixed element, screenshot the element
+  {
+    const nav = await page.$('.navbar');
+    if (nav) await nav.screenshot({ path: 'review-screenshots/desktop-navbar.png' });
+  }
+  // Scrolled state: brand appears left, links center, CTA right
+  await page.evaluate(() => window.scrollTo(0, 600));
+  await new Promise(r => setTimeout(r, 600));
+  {
+    const nav = await page.$('.navbar');
+    if (nav) {
+      await nav.screenshot({ path: 'review-screenshots/desktop-hero-scrolled.png' });
+      await nav.screenshot({ path: 'review-screenshots/desktop-navbar-scrolled.png' });
+    }
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await new Promise(r => setTimeout(r, 400));
   await takeScreenshot('desktop-que-es', await getElementClip('#que-es'));
   await takeScreenshot('desktop-prospect', await getElementClip('#blue-sky-prospect'));
   await takeScreenshot('desktop-agent-system', await getElementClip('#agent-system'));
@@ -54,6 +71,16 @@ const puppeteer = require('puppeteer');
 
   await page.reload({ waitUntil: 'networkidle0' });
   await new Promise(r => setTimeout(r, 2200));
+
+  // Mobile scrolled state (header) — fixed element
+  await page.evaluate(() => window.scrollTo(0, 600));
+  await new Promise(r => setTimeout(r, 600));
+  {
+    const nav = await page.$('.navbar');
+    if (nav) await nav.screenshot({ path: 'review-screenshots/mobile-hero-scrolled.png' });
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await new Promise(r => setTimeout(r, 400));
 
   // Mobile sections
   await takeScreenshot('mobile-full-page');
